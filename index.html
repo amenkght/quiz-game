@@ -1,24 +1,233 @@
-<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>اختبر معلوماتك</title>
-<style>body{font-family:system-ui,sans-serif;background:#f4efe6;margin:0;padding:16px;color:#222}.c{max-width:480px;margin:auto;background:#fff;border-radius:20px;padding:22px}h1{margin:0 0 6px}button{display:block;width:100%;margin:10px 0;padding:14px;font-size:18px;border-radius:12px;border:1px solid #ccc;background:#fff}button.p{background:#0d9488;color:#fff;border:0}.ok{background:#c9f2e6}.no{background:#fcd5d5}.f{background:#f4efe6;padding:12px;border-radius:12px;margin-top:10px}</style></head><body><div class="c" id="a"></div><script>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>تحدي المعلومات</title>
+<meta name="theme-color" content="#1b1464">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;min-height:100vh;font-family:system-ui,"Segoe UI",Tahoma,Arial,sans-serif;background:linear-gradient(160deg,#1b1464,#4a1d96 60%,#7b2ff7);color:#fff;display:flex;justify-content:center}
+#app{width:100%;max-width:520px;padding:16px 16px 40px}
+h1{font-size:28px;margin:8px 0 2px;text-align:center}
+.sub{text-align:center;opacity:.8;margin:0 0 14px;font-size:14px}
+.card{background:rgba(255,255,255,.12);border-radius:18px;padding:14px;margin:10px 0;backdrop-filter:blur(6px)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}
+.stats b{display:block;font-size:22px}.stats span{font-size:12px;opacity:.85}
+.bar{height:8px;background:rgba(255,255,255,.2);border-radius:8px;overflow:hidden;margin-top:10px}
+.bar i{display:block;height:100%;background:#ffd34d;border-radius:8px;transition:width .3s}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+button{font:inherit;color:inherit;border:0;cursor:pointer}
+.cat{background:rgba(255,255,255,.16);border-radius:16px;padding:16px 8px;font-size:18px;text-align:center;transition:transform .1s}
+.cat:active,.opt:active,.btn:active{transform:scale(.97)}
+.cat small{display:block;font-size:12px;opacity:.8;margin-top:4px}
+.cat .e{font-size:30px;display:block}
+.btn{display:block;width:100%;background:#ffd34d;color:#2a1a5e;font-weight:700;font-size:18px;border-radius:16px;padding:15px;margin:10px 0}
+.btn.sec{background:rgba(255,255,255,.18);color:#fff;font-weight:500}
+.top{display:flex;justify-content:space-between;align-items:center;font-size:15px}
+.timer{height:10px;background:rgba(255,255,255,.2);border-radius:10px;overflow:hidden;margin:10px 0}
+.timer i{display:block;height:100%;width:100%;background:#4ade80;transition:width .25s linear,background .3s}
+.q{font-size:22px;line-height:1.5;font-weight:700;margin:14px 0;min-height:70px}
+.opt{display:block;width:100%;text-align:right;background:rgba(255,255,255,.16);border-radius:14px;padding:14px 16px;margin:9px 0;font-size:18px;transition:background .2s,transform .1s}
+.opt.ok{background:#16a34a}.opt.no{background:#dc2626}.opt.off{opacity:.25;pointer-events:none}
+.life{display:flex;gap:8px;margin-top:6px}.life .btn{margin:0;font-size:14px;padding:10px}
+.life .btn:disabled{opacity:.35}
+.fact{background:rgba(0,0,0,.25);border-radius:12px;padding:10px 12px;margin-top:10px;font-size:15px;line-height:1.5}
+.big{font-size:56px;text-align:center;margin:10px 0 0}
+.score{font-size:42px;font-weight:800;text-align:center}
+.row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.12)}
+.hide{display:none}
+.pop{animation:pop .35s}@keyframes pop{0%{transform:scale(.8);opacity:0}100%{transform:scale(1);opacity:1}}
+.tag{font-size:12px;background:rgba(255,255,255,.2);border-radius:20px;padding:2px 10px}
+.link{background:none;text-decoration:underline;opacity:.7;font-size:13px;display:block;margin:14px auto 0}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const CATS=[
+{id:"egypt",n:"مصر",i:"🇪🇬"},{id:"science",n:"علوم",i:"🔬"},{id:"geo",n:"جغرافيا",i:"🌍"},{id:"history",n:"تاريخ",i:"🏛️"},{id:"sports",n:"رياضة",i:"⚽"},{id:"tech",n:"تكنولوجيا",i:"💻"}];
+// [cat, level, question, [correct, wrong, wrong, wrong], fun fact]
 const Q=[
-    { q: 'كام قلب عند الأخطبوط؟', options: ['قلب واحد', 'تلات قلوب', 'خمس قلوب'], answer: 1, fact: 'الأخطبوط عنده تلات قلوب: اتنين للخياشيم وواحد للجسم. ودمه أزرق كمان!' },
-    { q: 'إيه لون الغروب على المريخ؟', options: ['أحمر', 'أخضر', 'أزرق'], answer: 2, fact: 'غروب الشمس على المريخ أزرق، عكس الأرض، بسبب طريقة تشتت الغبار للضوء.' },
-    { q: 'مين الحيوان اللي برازه على شكل مكعبات؟', options: ['الومبت', 'الكنغر', 'الكوالا'], answer: 0, fact: 'الومبت بيطلّع برازه مكعبات، وبيستخدمها يعلّم بيها مكانه.' },
-    { q: 'أي كوكب أسخن كوكب في المجموعة الشمسية؟', options: ['عطارد', 'الزهرة', 'المريخ'], answer: 1, fact: 'الزهرة أسخن من عطارد رغم إنه أقرب للشمس، لأن غلافه الجوي بيحبس الحرارة. حرارته حوالي ٤٦٠ درجة مئوية.' },
-    { q: 'البرق أسخن من سطح الشمس ولا أبرد؟', options: ['أبرد بكتير', 'أسخن بكتير', 'نفس الحرارة'], answer: 1, fact: 'البرق ممكن توصل حرارته لحوالي ٣٠ ألف درجة مئوية، أسخن من سطح الشمس بكذا مرة، لكن للحظة صغيرة جدًا.' },
-    { q: 'كام عظمة في جسم الإنسان البالغ؟', options: ['٢٠٦', '٣٠٠', '١٠٠'], answer: 0, fact: 'البالغ عنده ٢٠٦ عظمة. الطفل بيتولد بحوالي ٣٠٠ عظمة، وبعضها بيلتحم مع الوقت.' },
-    { q: 'مين الضفدعة اللي بتتجمد في الشتا وترجع تعيش؟', options: ['ضفدعة الشجر الأخضر', 'ضفدعة الخشب', 'ضفدعة الصحرا'], answer: 1, fact: 'ضفدعة الخشب بيتجمد جزء كبير من جسمها في الشتا، وقلبها بيقف، وبترجع تتحرك لما الدنيا تدفى.' },
-    { q: 'مين أسرع حيوان بري؟', options: ['الأسد', 'الفهد (الشيتا)', 'الحصان'], answer: 1, fact: 'الفهد بيجري لحد حوالي ١٠٠ كم في الساعة في مسافات قصيرة.' },
-    { q: 'العسل ممكن يبوظ مع الوقت؟', options: ['أيوه بعد سنة', 'أيوه بعد ١٠ سنين', 'لأ، بيفضل صالح لسنين طويلة'], answer: 2, fact: 'العسل نسبة المية فيه قليلة وحموضته عالية، فالبكتيريا مش بتعيش فيه، فبيفضل صالح لسنين طويلة لو اتحفظ كويس.' },
-    { q: 'أكبر محيط في العالم؟', options: ['الأطلسي', 'الهندي', 'الهادي'], answer: 2, fact: 'المحيط الهادي أكبر محيط، ومساحته أكبر من كل اليابسة مجمعة.' },
-    { q: 'الفلفل الحار بيحرق لأن فيه إيه؟', options: ['الكابسيسين', 'الكافيين', 'السكر'], answer: 0, fact: 'مادة الكابسيسين بتخلي المخ يحس بحرقان، مع إن مفيش حرارة حقيقية.' },
-    { q: 'كام قلب عند دودة الأرض؟', options: ['قلب واحد', 'خمس قلوب بسيطة', 'مفيش قلب'], answer: 1, fact: 'دودة الأرض عندها خمس أقواس بتشتغل كقلوب بتضخ الدم في جسمها.' },
-];let i=0,s=0,p=null;const a=document.getElementById('a');
-function start(){i=0;s=0;p=null;r()}
-function r(){if(i>=Q.length){a.innerHTML='<h1>خلصت! 🎉</h1><p>'+s+' من '+Q.length+'</p><button class=p onclick=start()>العب تاني</button>';return}
-const q=Q[i];let h='<small>سؤال '+(i+1)+' من '+Q.length+' | النقاط: '+s+'</small><h2>'+q.q+'</h2>';
-q.options.forEach((o,n)=>{let c=p===null?'':n==q.answer?'ok':n==p?'no':'';h+='<button class="'+c+'" '+(p!==null?'disabled':'')+' onclick=ch('+n+')>'+o+'</button>'});
-if(p!==null)h+='<div class=f>'+q.fact+'</div><button class=p onclick="i++;p=null;r()">التالي</button>';a.innerHTML=h}
-function ch(n){if(p!==null)return;p=n;if(n==Q[i].answer)s++;r()}
-a.innerHTML='<h1>اختبر معلوماتك 🧠</h1><p>لعبة أسئلة من عالم «معلومة في دقيقة»</p><button class=p onclick=start()>ابدأ اللعب</button>';
-</script></body></html>
+["egypt",1,"ما هي عاصمة مصر؟",["القاهرة","الإسكندرية","الأقصر","أسوان"],"القاهرة تُلقب بمدينة الألف مئذنة."],
+["egypt",1,"ما هو أطول نهر يمر في مصر؟",["نهر النيل","نهر الفرات","نهر السين","نهر الدانوب"],"النيل يمتد لأكثر من 6600 كم، وهو من أطول أنهار العالم."],
+["egypt",1,"في أي محافظة تقع أهرامات الجيزة؟",["الجيزة","الأقصر","الفيوم","المنيا"],"الأهرامات الثلاثة الكبرى هي خوفو وخفرع ومنقرع."],
+["egypt",1,"ما هو البحر الذي يحد مصر من الشمال؟",["البحر المتوسط","البحر الأحمر","بحر العرب","البحر الأسود"],"لمصر سواحل على المتوسط شمالاً والأحمر شرقاً."],
+["egypt",1,"ما هي عملة مصر؟",["الجنيه","الدينار","الريال","الدرهم"],"الجنيه المصري أُصدر لأول مرة عام 1834."],
+["egypt",2,"من هو الملك الذي بنى الهرم الأكبر؟",["خوفو","رمسيس الثاني","توت عنخ آمون","أحمس"],"الهرم الأكبر ظل أطول مبنى صنعه الإنسان لنحو 3800 سنة."],
+["egypt",2,"ما اسم القناة التي تربط البحر المتوسط بالبحر الأحمر؟",["قناة السويس","قناة بنما","قناة كييل","قناة الإسماعيلية"],"قناة السويس اختصرت رحلة السفن بين أوروبا وآسيا آلاف الكيلومترات."],
+["egypt",2,"في أي عام افتُتحت قناة السويس للملاحة؟",["1869","1798","1952","1914"],"افتُتحت في احتفال كبير حضرته الإمبراطورة أوجيني."],
+["egypt",2,"أي محافظة هي الأكبر مساحة في مصر؟",["الوادي الجديد","جنوب سيناء","مطروح","أسوان"],"الوادي الجديد تشكل نحو 44% من مساحة مصر تقريباً."],
+["egypt",2,"في أي مدينة يقع معبد أبو سمبل؟",["أسوان","الأقصر","سوهاج","قنا"],"نُقل المعبد بالكامل في الستينيات لإنقاذه من مياه السد العالي."],
+["egypt",3,"من هو مكتشف مقبرة توت عنخ آمون عام 1922؟",["هوارد كارتر","شامبليون","نابليون","ماريت باشا"],"عُثر على أكثر من 5000 قطعة داخل المقبرة."],
+["egypt",3,"أي حجر ساعد شامبليون على فك رموز الهيروغليفية؟",["حجر رشيد","حجر الصوان","حجر الأساس","حجر فيلة"],"الحجر محفوظ اليوم في المتحف البريطاني."],
+["egypt",3,"ما عاصمة مصر القديمة في عصر الدولة الحديثة؟",["طيبة","منف","أخيتاتون","تانيس"],"طيبة هي الأقصر الحالية وتضم معبد الكرنك."],
+["egypt",3,"ما اسم أكبر بحيرة صناعية في مصر خلف السد العالي؟",["بحيرة ناصر","بحيرة قارون","بحيرة المنزلة","بحيرة البردويل"],"يبلغ طولها نحو 500 كم."],
+["science",1,"كم عدد كواكب المجموعة الشمسية؟",["8","9","7","10"],"بلوتو أُعيد تصنيفه ككوكب قزم عام 2006."],
+["science",1,"ما الغاز الذي نحتاجه في التنفس؟",["الأكسجين","النيتروجين","الهيليوم","الهيدروجين"],"الأكسجين يشكل نحو 21% من الهواء."],
+["science",1,"ما أقرب كوكب إلى الشمس؟",["عطارد","الزهرة","المريخ","الأرض"],"السنة على عطارد تدوم نحو 88 يوماً أرضياً فقط."],
+["science",1,"ما الرمز الكيميائي للماء؟",["H2O","CO2","O2","NaCl"],"جزيء الماء يتكون من ذرتي هيدروجين وذرة أكسجين."],
+["science",1,"ما أكبر كوكب في المجموعة الشمسية؟",["المشتري","زحل","نبتون","الأرض"],"يتسع المشتري لأكثر من 1300 كوكب بحجم الأرض."],
+["science",2,"كم عدد عظام جسم الإنسان البالغ؟",["206","150","300","180"],"يولد الطفل بنحو 270 عظمة تلتحم مع الوقت."],
+["science",2,"ما أسرع حيوان بري؟",["الفهد","الأسد","الحصان","الغزال"],"الفهد يصل إلى نحو 100 كم/س في مسافات قصيرة."],
+["science",2,"أي عضو في الجسم ينقي الدم من الفضلات؟",["الكلى","المعدة","الرئتان","الطحال"],"الكليتان تنقيان نحو 180 لتراً من الدم يومياً."],
+["science",2,"ما الغاز الأكثر وجوداً في هواء الأرض؟",["النيتروجين","الأكسجين","ثاني أكسيد الكربون","الأرجون"],"النيتروجين يشكل نحو 78% من الغلاف الجوي."],
+["science",2,"ما العنصر الذي رمزه Fe؟",["الحديد","الفضة","الفلور","الذهب"],"الرمز Fe مأخوذ من الاسم اللاتيني فيروم."],
+["science",3,"ما العدد الذري لعنصر الكربون؟",["6","8","12","4"],"الكربون أساس كل المركبات العضوية والحياة على الأرض."],
+["science",3,"من صاحب نظرية النسبية؟",["ألبرت أينشتاين","إسحاق نيوتن","غاليليو","نيلز بور"],"نال أينشتاين جائزة نوبل عام 1921 عن تفسير التأثير الكهروضوئي."],
+["science",3,"أي فيتامين يصنعه الجلد عند التعرض للشمس؟",["فيتامين د","فيتامين ج","فيتامين أ","فيتامين ك"],"نقصه شائع ويؤثر على العظام."],
+["science",3,"ما أصلب مادة طبيعية معروفة؟",["الألماس","الحديد","الذهب","الكوارتز"],"الألماس والجرافيت كلاهما كربون بترتيب ذري مختلف."],
+["science",3,"كم تقريباً سرعة الضوء في الثانية؟",["300 ألف كم","30 ألف كم","3 ملايين كم","3 آلاف كم"],"ضوء الشمس يحتاج نحو 8 دقائق ليصل إلى الأرض."],
+["geo",1,"ما أكبر قارات العالم مساحة؟",["آسيا","أفريقيا","أوروبا","أمريكا الشمالية"],"آسيا تضم نحو 60% من سكان العالم."],
+["geo",1,"ما أكبر محيطات العالم؟",["الهادئ","الأطلسي","الهندي","المتجمد الشمالي"],"المحيط الهادئ يغطي نحو ثلث سطح الأرض."],
+["geo",1,"ما عاصمة فرنسا؟",["باريس","لندن","روما","مدريد"],"برج إيفل افتُتح عام 1889."],
+["geo",1,"ما عاصمة المملكة العربية السعودية؟",["الرياض","جدة","مكة","الدمام"],"الرياض أكبر مدن المملكة."],
+["geo",1,"ما أكبر دولة في العالم مساحة؟",["روسيا","كندا","الصين","أمريكا"],"تمتد روسيا على 11 منطقة زمنية."],
+["geo",2,"ما عاصمة اليابان؟",["طوكيو","كيوتو","أوساكا","سول"],"طوكيو من أكبر المدن سكاناً في العالم."],
+["geo",2,"ما عاصمة أستراليا؟",["كانبرا","سيدني","ملبورن","بيرث"],"كثيرون يظنون أنها سيدني لكنها كانبرا."],
+["geo",2,"ما أعلى قمة جبلية في العالم؟",["إفرست","كيليمانجارو","مون بلان","إلبروس"],"ارتفاع إفرست نحو 8849 متراً."],
+["geo",2,"ما أكبر صحراء حارة في العالم؟",["الصحراء الكبرى","صحراء كالاهاري","صحراء جوبي","صحراء النفود"],"الصحراء الكبرى بحجم الولايات المتحدة تقريباً."],
+["geo",2,"في أي قارة تقع البرازيل؟",["أمريكا الجنوبية","أفريقيا","آسيا","أوروبا"],"البرازيل أكبر دولة في أمريكا الجنوبية."],
+["geo",3,"ما أصغر دولة في العالم مساحة؟",["الفاتيكان","موناكو","مالطا","سان مارينو"],"مساحتها نحو 0.44 كم² فقط."],
+["geo",3,"ما أعمق بحيرة في العالم؟",["بايكال","فيكتوريا","سوبيريور","تنجانيقا"],"بايكال في روسيا وتحوي نحو خُمس المياه العذبة السطحية في العالم."],
+["geo",3,"ما عاصمة كندا؟",["أوتاوا","تورونتو","فانكوفر","مونتريال"],"تورونتو الأكبر سكاناً لكن العاصمة أوتاوا."],
+["geo",3,"ما عاصمة المغرب؟",["الرباط","الدار البيضاء","مراكش","فاس"],"الدار البيضاء أكبر مدن المغرب والرباط العاصمة."],
+["geo",3,"أي نهر يمر بمدينة باريس؟",["نهر السين","نهر التايمز","نهر الراين","نهر التيبر"],"يبلغ طول نهر السين نحو 777 كم."],
+["history",1,"من هو أول رئيس لجمهورية مصر؟",["محمد نجيب","جمال عبد الناصر","أنور السادات","حسني مبارك"],"أُعلنت الجمهورية في يونيو 1953."],
+["history",1,"في أي عام قامت ثورة يوليو في مصر؟",["1952","1948","1967","1973"],"قامت الثورة يوم 23 يوليو."],
+["history",1,"من هو القائد الذي فتح مصر في الإسلام؟",["عمرو بن العاص","خالد بن الوليد","طارق بن زياد","صلاح الدين"],"أسس عمرو بن العاص مدينة الفسطاط."],
+["history",1,"في أي عام كان نصر أكتوبر؟",["1973","1967","1956","1982"],"بدأت الحرب يوم 6 أكتوبر 1973."],
+["history",2,"في أي عام بدأت الحرب العالمية الأولى؟",["1914","1939","1905","1925"],"استمرت الحرب حتى عام 1918."],
+["history",2,"من هو مكتشف قارة أمريكا عام 1492؟",["كريستوفر كولومبوس","ماجلان","فاسكو دا جاما","ماركو بولو"],"ظن كولومبوس أنه وصل إلى الهند."],
+["history",2,"من القائد الذي انتصر في معركة عين جالوت؟",["سيف الدين قطز","صلاح الدين","بيبرس","محمد علي"],"المعركة عام 1260 أوقفت زحف المغول."],
+["history",2,"من مؤسس مدينة القاهرة الفاطمية؟",["جوهر الصقلي","عمرو بن العاص","أحمد بن طولون","صلاح الدين"],"تأسست القاهرة عام 969 ميلادية."],
+["history",2,"في أي عام انتهت الحرب العالمية الثانية؟",["1945","1939","1950","1918"],"انتهت بعد استسلام ألمانيا واليابان."],
+["history",3,"من قائد المسلمين في معركة حطين؟",["صلاح الدين الأيوبي","قطز","طارق بن زياد","نور الدين"],"كانت المعركة عام 1187 ومهدت لتحرير القدس."],
+["history",3,"في أي عام فتح محمد الفاتح القسطنطينية؟",["1453","1258","1492","1517"],"حُوّلت المدينة بعدها إلى إسطنبول."],
+["history",3,"من هي الملكة الفرعونية المرتبطة بيوليوس قيصر وأنطونيو؟",["كليوباترا","نفرتيتي","حتشبسوت","نفرتاري"],"كليوباترا السابعة آخر ملوك الأسرة البطلمية."],
+["history",3,"في أي عام قامت الثورة الفرنسية؟",["1789","1689","1848","1914"],"بدأت باقتحام سجن الباستيل."],
+["history",3,"من أول إنسان وطئت قدمه سطح القمر؟",["نيل أرمسترونغ","يوري غاغارين","باز ألدرين","جون غلين"],"حدث ذلك في يوليو 1969 ضمن مهمة أبولو 11."],
+["sports",1,"كم عدد لاعبي فريق كرة القدم داخل الملعب؟",["11","9","10","12"],"يشمل العدد حارس المرمى."],
+["sports",1,"أي دولة استضافت كأس العالم 2022؟",["قطر","روسيا","البرازيل","ألمانيا"],"كانت أول بطولة كأس عالم تقام في دولة عربية."],
+["sports",1,"من فاز بكأس العالم 2022؟",["الأرجنتين","فرنسا","البرازيل","كرواتيا"],"فازت الأرجنتين بركلات الترجيح في النهائي."],
+["sports",1,"كم دقيقة مدة مباراة كرة القدم الأساسية؟",["90","60","80","100"],"شوطان مدة كل منهما 45 دقيقة."],
+["sports",2,"أي لاعب مصري لعب في نادي ليفربول الإنجليزي؟",["محمد صلاح","محمد أبو تريكة","أحمد حسام ميدو","حسام غالي"],"فاز صلاح بالدوري الإنجليزي مع ليفربول موسم 2019/2020."],
+["sports",2,"كم مرة يقام كأس العالم لكرة القدم؟",["كل 4 سنوات","كل سنتين","كل سنة","كل 5 سنوات"],"أقيمت أول نسخة عام 1930."],
+["sports",2,"أي منتخب هو الأكثر فوزاً بكأس أمم أفريقيا؟",["مصر","الكاميرون","غانا","نيجيريا"],"فازت مصر بالبطولة 7 مرات."],
+["sports",2,"من هو اللاعب البرازيلي الأسطورة الملقب بـ الجوهرة السوداء؟",["بيليه","رونالدو","نيمار","روماريو"],"فاز بيليه بكأس العالم 3 مرات."],
+["sports",2,"كم عدد حلقات شعار الأولمبياد؟",["5","4","6","7"],"تمثل الحلقات الخمس قارات العالم."],
+["sports",3,"كم مرة فاز منتخب البرازيل بكأس العالم؟",["5","4","3","6"],"البرازيل هي المنتخب الوحيد الذي شارك في كل النسخ."],
+["sports",3,"من فاز بأول كأس عالم عام 1930؟",["الأوروغواي","الأرجنتين","البرازيل","إيطاليا"],"أُقيمت البطولة الأولى في الأوروغواي نفسها."],
+["sports",3,"من هو هداف كأس العالم عبر التاريخ؟",["ميروسلاف كلوزه","ليونيل ميسي","رونالدو","بيليه"],"سجل كلوزه 16 هدفاً في أربع بطولات."],
+["sports",3,"أي مدينة استضافت أولمبياد طوكيو الذي أُقيم عام 2021؟",["طوكيو","أوساكا","بكين","سول"],"تأجل الحدث من 2020 بسبب جائحة كورونا."],
+["sports",3,"كم لاعباً في فريق كرة السلة داخل الملعب؟",["5","6","7","11"],"لكل فريق 5 لاعبين في الملعب."],
+["tech",1,"أي شركة تصنع هاتف آيفون؟",["آبل","سامسونج","جوجل","هواوي"],"أُطلق أول آيفون عام 2007."],
+["tech",1,"ما محرك البحث الأشهر في العالم؟",["جوجل","بينج","ياهو","ديك دك جو"],"تأسست جوجل عام 1998."],
+["tech",1,"أي من التالي نظام تشغيل للهواتف؟",["أندرويد","إنتل","ويندوز إكس بي","إكسل"],"أندرويد من تطوير شركة جوجل."],
+["tech",1,"ماذا تعني كلمة Wi-Fi في الاستخدام اليومي؟",["شبكة إنترنت لاسلكية","كابل","بطارية","شاشة"],"تتيح الاتصال دون أسلاك."],
+["tech",2,"من مؤسس شركة مايكروسوفت؟",["بيل جيتس","ستيف جوبز","مارك زوكربيرج","إيلون ماسك"],"أسسها بيل جيتس وبول ألين عام 1975."],
+["tech",2,"ما معنى AI؟",["الذكاء الاصطناعي","الإنترنت المتقدم","التطبيق الآلي","الاتصال الدولي"],"مصطلح الذكاء الاصطناعي ظهر عام 1956."],
+["tech",2,"من مؤسس موقع فيسبوك؟",["مارك زوكربيرج","جاك دورسي","لاري بيج","بيل جيتس"],"أُطلق فيسبوك عام 2004 من داخل جامعة هارفارد."],
+["tech",2,"أي وحدة تخزين أكبر؟",["جيجابايت","ميجابايت","كيلوبايت","بايت"],"الجيجابايت يساوي نحو 1000 ميجابايت."],
+["tech",2,"ما لغة تصميم هيكل صفحات الويب؟",["HTML","Python","SQL","Java"],"HTML اختصار لـ لغة ترميز النص التشعبي."],
+["tech",3,"من مخترع شبكة الويب العالمية WWW؟",["تيم بيرنرز لي","ستيف جوبز","دينيس ريتشي","لينوس تورفالدز"],"اخترعها عام 1989 أثناء عمله في سيرن."],
+["tech",3,"كم بتاً في البايت الواحد؟",["8","4","16","10"],"البت أصغر وحدة معلومات: 0 أو 1."],
+["tech",3,"ماذا تعني RAM؟",["ذاكرة الوصول العشوائي","وحدة المعالجة المركزية","القرص الصلب","بطاقة الشاشة"],"تُفقد بياناتها عند إطفاء الجهاز."],
+["tech",3,"لغة البرمجة Python سُميت على اسم ماذا؟",["فرقة كوميدية مونتي بايثون","ثعبان","جزيرة","كوكب"],"أطلق جايدو فان روسوم الاسم تيمناً بعرض كوميدي بريطاني."],
+["tech",3,"من مؤسس نظام التشغيل مفتوح المصدر لينكس؟",["لينوس تورفالدز","بيل جيتس","ستيف وزنياك","ريتشارد ستولمان"],"أطلق نواة لينكس عام 1991."]
+];
+
+const LV={1:"سهل",2:"متوسط",3:"صعب"};
+const KEY="quizv2";
+let S=load();
+function load(){try{const d=JSON.parse(localStorage.getItem(KEY));if(d)return d}catch(e){}return{points:0,games:0,correct:0,answered:0,best:0,bestStreak:0,days:0,last:"",cat:{},mute:false}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+const $=s=>document.querySelector(s),app=$("#app");
+const lvl=p=>Math.floor(Math.sqrt(p/60))+1;
+const lvBase=l=>(l-1)*(l-1)*60;
+const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+let ac;function beep(f,d){if(S.mute)return;try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator(),g=ac.createGain();o.frequency.value=f;g.gain.value=.08;o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+d)}catch(e){}}
+function vib(n){try{if(!S.mute&&navigator.vibrate)navigator.vibrate(n)}catch(e){}}
+function today(){return new Date().toISOString().slice(0,10)}
+function home(){
+  clearInterval(G&&G.t);
+  const L=lvl(S.points),b=lvBase(L),n=lvBase(L+1),pct=Math.round((S.points-b)/(n-b)*100);
+  const acc=S.answered?Math.round(S.correct/S.answered*100):0;
+  app.innerHTML=`<h1>🧠 تحدي المعلومات</h1><p class="sub">اختبر معلوماتك واجمع النقاط</p>
+  <div class="card pop"><div class="stats"><div><b>${S.points}</b><span>نقاطك</span></div><div><b>${L}</b><span>المستوى</span></div><div><b>🔥 ${S.days}</b><span>أيام متتالية</span></div></div>
+  <div class="bar"><i style="width:${pct}%"></i></div><div class="sub" style="margin:6px 0 0;font-size:12px">${n-S.points} نقطة للمستوى ${L+1}</div></div>
+  <button class="btn" id="rnd">🎲 لعب عشوائي (10 أسئلة)</button>
+  <div class="grid">${CATS.map(c=>`<button class="cat" data-c="${c.id}"><span class="e">${c.i}</span>${c.n}<small>أفضل: ${(S.cat[c.id]||0)}/10</small></button>`).join("")}</div>
+  <div class="card" style="margin-top:14px"><div class="row"><span>أعلى نتيجة</span><b>${S.best}</b></div><div class="row"><span>أطول سلسلة صح</span><b>${S.bestStreak}</b></div><div class="row"><span>الدقة</span><b>${acc}%</b></div><div class="row" style="border:0"><span>مرات اللعب</span><b>${S.games}</b></div></div>
+  <button class="btn sec" id="mute">${S.mute?"🔇 الصوت مغلق":"🔊 الصوت مفتوح"}</button>
+  <button class="link" id="reset">مسح كل البيانات</button>`;
+  $("#rnd").onclick=()=>start(null);
+  document.querySelectorAll(".cat").forEach(b=>b.onclick=()=>start(b.dataset.c));
+  $("#mute").onclick=()=>{S.mute=!S.mute;save();home()};
+  $("#reset").onclick=()=>{if(confirm("متأكد إنك عايز تمسح كل النقاط؟")){localStorage.removeItem(KEY);S=load();home()}};
+}
+let G=null;
+function start(c){
+  let pool=Q.filter(q=>!c||q[0]===c);
+  let pick=[];
+  [1,2,3].forEach(l=>{pick=pick.concat(shuf(pool.filter(q=>q[1]===l)).slice(0,l===1?3:l===2?4:3))});
+  if(pick.length<10)pick=pick.concat(shuf(pool.filter(q=>!pick.includes(q))).slice(0,10-pick.length));
+  pick=pick.slice(0,10).sort((a,b)=>a[1]-b[1]);
+  G={c,qs:pick,i:0,score:0,streak:0,maxStreak:0,right:0,f:1,skip:1,locked:false,t:null,left:15};
+  show();
+}
+function show(){
+  const q=G.qs[G.i];G.opts=shuf(q[3].map((t,i)=>({t,ok:i===0})));G.locked=false;G.left=15;
+  const cat=CATS.find(c=>c.id===q[0]);
+  app.innerHTML=`<div class="top"><button class="tag" id="x">✕ خروج</button><span class="tag">${cat.i} ${cat.n} · ${LV[q[1]]}</span><span>⭐ ${G.score}</span></div>
+  <div class="top" style="margin-top:10px"><span>سؤال ${G.i+1} / 10</span><span>${G.streak>1?"🔥 "+G.streak+" متتالية":""}</span><span id="tl">15</span></div>
+  <div class="timer"><i id="tb"></i></div>
+  <div class="q pop">${q[2]}</div>
+  <div id="opts">${G.opts.map((o,i)=>`<button class="opt" data-i="${i}">${o.t}</button>`).join("")}</div>
+  <div class="life"><button class="btn sec" id="l5" ${G.f?"":"disabled"}>✂️ حذف إجابتين</button><button class="btn sec" id="ls" ${G.skip?"":"disabled"}>⏭️ تخطي</button></div>
+  <div id="fx"></div>`;
+  document.querySelectorAll(".opt").forEach(b=>b.onclick=()=>ans(+b.dataset.i));
+  $("#x").onclick=()=>{if(confirm("تخرج من اللعبة؟"))home()};
+  $("#l5").onclick=()=>{if(G.locked||!G.f)return;G.f=0;shuf(G.opts.map((o,i)=>i).filter(i=>!G.opts[i].ok)).slice(0,2).forEach(i=>document.querySelector(`.opt[data-i="${i}"]`).classList.add("off"));$("#l5").disabled=true};
+  $("#ls").onclick=()=>{if(G.locked||!G.skip)return;G.skip=0;G.streak=0;next()};
+  clearInterval(G.t);
+  G.t=setInterval(()=>{G.left-=.25;const r=Math.max(G.left,0);$("#tb").style.width=(r/15*100)+"%";$("#tb").style.background=r<5?"#ef4444":r<9?"#facc15":"#4ade80";$("#tl").textContent=Math.ceil(r);if(G.left<=0){ans(-1)}},250);
+}
+function ans(i){
+  if(G.locked)return;G.locked=true;clearInterval(G.t);
+  const q=G.qs[G.i],ok=i>=0&&G.opts[i].ok;S.answered++;
+  document.querySelectorAll(".opt").forEach((b,k)=>{if(G.opts[k].ok)b.classList.add("ok");else if(k===i)b.classList.add("no")});
+  let gain=0;
+  if(ok){S.correct++;G.right++;G.streak++;G.maxStreak=Math.max(G.maxStreak,G.streak);gain=10+(q[1]-1)*5+Math.floor(Math.max(G.left,0)/2)+(G.streak>=3?5:0);G.score+=gain;beep(660,.15);vib(40)}else{G.streak=0;beep(200,.3);vib([80,40,80])}
+  $("#fx").innerHTML=`<div class="fact pop">${ok?`✅ صح! +${gain} نقطة`:(i<0?"⏰ خلص الوقت":"❌ غلط")}<br>💡 ${q[4]}</div><button class="btn" id="nx">${G.i>=9?"شوف النتيجة":"التالي ◀"}</button>`;
+  $("#nx").onclick=next;
+}
+function next(){clearInterval(G.t);G.i++;if(G.i>=10)return end();show()}
+function end(){
+  const today_=today();
+  if(S.last!==today_){const y=new Date(Date.now()-864e5).toISOString().slice(0,10);S.days=S.last===y?S.days+1:1;S.last=today_}
+  const before=lvl(S.points);S.points+=G.score;S.games++;S.best=Math.max(S.best,G.right);S.bestStreak=Math.max(S.bestStreak,G.maxStreak);
+  if(G.c)S.cat[G.c]=Math.max(S.cat[G.c]||0,G.right);
+  const after=lvl(S.points);save();
+  const stars=G.right>=9?3:G.right>=6?2:G.right>=3?1:0;
+  app.innerHTML=`<div class="big pop">${"⭐".repeat(stars)||"💪"}</div><div class="score pop">${G.right} / 10</div>
+  <p class="sub">${G.right>=9?"أسطورة! 🔥":G.right>=6?"شغل حلو، كمّل!":"حاول تاني وهتتحسن"}</p>
+  <div class="card"><div class="row"><span>نقاط الجولة</span><b>+${G.score}</b></div><div class="row"><span>أطول سلسلة</span><b>${G.maxStreak}</b></div><div class="row" style="border:0"><span>إجمالي نقاطك</span><b>${S.points}</b></div></div>
+  ${after>before?`<div class="card pop" style="text-align:center;font-size:20px">🎉 وصلت للمستوى ${after}!</div>`:""}
+  <button class="btn" id="again">العب تاني</button>
+  <button class="btn sec" id="sh">📤 شارك نتيجتك</button>
+  <button class="btn sec" id="hm">القائمة الرئيسية</button>`;
+  const c=G.c;
+  $("#again").onclick=()=>start(c);$("#hm").onclick=home;
+  $("#sh").onclick=()=>{const t=`جبت ${G.right}/10 في تحدي المعلومات! تقدر تكسب نتيجتي؟ ${location.href.split("#")[0]}`;if(navigator.share)navigator.share({text:t}).catch(()=>{});else window.open("https://wa.me/?text="+encodeURIComponent(t),"_blank")};
+}
+if("serviceWorker" in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("sw.js").catch(()=>{});
+home();
+</script>
+</body>
+</html>
