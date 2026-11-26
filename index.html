@@ -1,0 +1,24 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>اختبر معلوماتك</title>
+<style>body{font-family:system-ui,sans-serif;background:#f4efe6;margin:0;padding:16px;color:#222}.c{max-width:480px;margin:auto;background:#fff;border-radius:20px;padding:22px}h1{margin:0 0 6px}button{display:block;width:100%;margin:10px 0;padding:14px;font-size:18px;border-radius:12px;border:1px solid #ccc;background:#fff}button.p{background:#0d9488;color:#fff;border:0}.ok{background:#c9f2e6}.no{background:#fcd5d5}.f{background:#f4efe6;padding:12px;border-radius:12px;margin-top:10px}</style></head><body><div class="c" id="a"></div><script>
+const Q=[
+    { q: 'كام قلب عند الأخطبوط؟', options: ['قلب واحد', 'تلات قلوب', 'خمس قلوب'], answer: 1, fact: 'الأخطبوط عنده تلات قلوب: اتنين للخياشيم وواحد للجسم. ودمه أزرق كمان!' },
+    { q: 'إيه لون الغروب على المريخ؟', options: ['أحمر', 'أخضر', 'أزرق'], answer: 2, fact: 'غروب الشمس على المريخ أزرق، عكس الأرض، بسبب طريقة تشتت الغبار للضوء.' },
+    { q: 'مين الحيوان اللي برازه على شكل مكعبات؟', options: ['الومبت', 'الكنغر', 'الكوالا'], answer: 0, fact: 'الومبت بيطلّع برازه مكعبات، وبيستخدمها يعلّم بيها مكانه.' },
+    { q: 'أي كوكب أسخن كوكب في المجموعة الشمسية؟', options: ['عطارد', 'الزهرة', 'المريخ'], answer: 1, fact: 'الزهرة أسخن من عطارد رغم إنه أقرب للشمس، لأن غلافه الجوي بيحبس الحرارة. حرارته حوالي ٤٦٠ درجة مئوية.' },
+    { q: 'البرق أسخن من سطح الشمس ولا أبرد؟', options: ['أبرد بكتير', 'أسخن بكتير', 'نفس الحرارة'], answer: 1, fact: 'البرق ممكن توصل حرارته لحوالي ٣٠ ألف درجة مئوية، أسخن من سطح الشمس بكذا مرة، لكن للحظة صغيرة جدًا.' },
+    { q: 'كام عظمة في جسم الإنسان البالغ؟', options: ['٢٠٦', '٣٠٠', '١٠٠'], answer: 0, fact: 'البالغ عنده ٢٠٦ عظمة. الطفل بيتولد بحوالي ٣٠٠ عظمة، وبعضها بيلتحم مع الوقت.' },
+    { q: 'مين الضفدعة اللي بتتجمد في الشتا وترجع تعيش؟', options: ['ضفدعة الشجر الأخضر', 'ضفدعة الخشب', 'ضفدعة الصحرا'], answer: 1, fact: 'ضفدعة الخشب بيتجمد جزء كبير من جسمها في الشتا، وقلبها بيقف، وبترجع تتحرك لما الدنيا تدفى.' },
+    { q: 'مين أسرع حيوان بري؟', options: ['الأسد', 'الفهد (الشيتا)', 'الحصان'], answer: 1, fact: 'الفهد بيجري لحد حوالي ١٠٠ كم في الساعة في مسافات قصيرة.' },
+    { q: 'العسل ممكن يبوظ مع الوقت؟', options: ['أيوه بعد سنة', 'أيوه بعد ١٠ سنين', 'لأ، بيفضل صالح لسنين طويلة'], answer: 2, fact: 'العسل نسبة المية فيه قليلة وحموضته عالية، فالبكتيريا مش بتعيش فيه، فبيفضل صالح لسنين طويلة لو اتحفظ كويس.' },
+    { q: 'أكبر محيط في العالم؟', options: ['الأطلسي', 'الهندي', 'الهادي'], answer: 2, fact: 'المحيط الهادي أكبر محيط، ومساحته أكبر من كل اليابسة مجمعة.' },
+    { q: 'الفلفل الحار بيحرق لأن فيه إيه؟', options: ['الكابسيسين', 'الكافيين', 'السكر'], answer: 0, fact: 'مادة الكابسيسين بتخلي المخ يحس بحرقان، مع إن مفيش حرارة حقيقية.' },
+    { q: 'كام قلب عند دودة الأرض؟', options: ['قلب واحد', 'خمس قلوب بسيطة', 'مفيش قلب'], answer: 1, fact: 'دودة الأرض عندها خمس أقواس بتشتغل كقلوب بتضخ الدم في جسمها.' },
+];let i=0,s=0,p=null;const a=document.getElementById('a');
+function start(){i=0;s=0;p=null;r()}
+function r(){if(i>=Q.length){a.innerHTML='<h1>خلصت! 🎉</h1><p>'+s+' من '+Q.length+'</p><button class=p onclick=start()>العب تاني</button>';return}
+const q=Q[i];let h='<small>سؤال '+(i+1)+' من '+Q.length+' | النقاط: '+s+'</small><h2>'+q.q+'</h2>';
+q.options.forEach((o,n)=>{let c=p===null?'':n==q.answer?'ok':n==p?'no':'';h+='<button class="'+c+'" '+(p!==null?'disabled':'')+' onclick=ch('+n+')>'+o+'</button>'});
+if(p!==null)h+='<div class=f>'+q.fact+'</div><button class=p onclick="i++;p=null;r()">التالي</button>';a.innerHTML=h}
+function ch(n){if(p!==null)return;p=n;if(n==Q[i].answer)s++;r()}
+a.innerHTML='<h1>اختبر معلوماتك 🧠</h1><p>لعبة أسئلة من عالم «معلومة في دقيقة»</p><button class=p onclick=start()>ابدأ اللعب</button>';
+</script></body></html>
